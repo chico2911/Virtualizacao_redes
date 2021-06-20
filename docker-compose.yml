@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+    mongo:
+      image: mongo
+      container_name: mongo_container
+      volumes: 
+          - database:/home
+      networks:
+          - network1
+    authentication:
+        image:  authentication
+        container_name: authentication_container
+        networks: 
+            - network1
+        ports:
+            - '8001:8001'         
+volumes:
+    database:
+networks: 
+    network1:
