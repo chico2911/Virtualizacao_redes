@@ -3,47 +3,45 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var url = 'http://localhost:8002'
-var authenticationUrl = 'http://localhost:8001/'
+var url = 'http://localhost:4000/'
+var authenticationUrl = 'http://auth:5000/'
+var authentication = 'http://localhost:5000'
 var indexRouter = require('./routes/index');
 var jwt = require('jsonwebtoken')
+var axios = require('axios');
 
 var app = express();
 app.use(cookieParser())
-/*
+
+
 app.use(function (req, res, next) {
   if (req.cookies.token == null) {
       switch (req.url) {
-          case "/users/signup": next();
+          case "/users/signup": 
+              res.redirect(authentication+'/signup');
               break;
           case "/users/login":
               res.cookie('url',url);
-              res.redirect(authenticationUrl+'login')
+              res.redirect(authentication+'/login')
               break;
           case "/favicon.ico": next();
               break;
           default: 
               res.cookie('url',url+req.url);
-              res.redirect(authenticationUrl+'login')
+              res.redirect(authentication+'/login')
               break;
       }
   } else { // authentication
-      jwt.verify(req.cookies.token, 'VR2021', function (e, payload) {
-          if (e) {
-              res.cookie('url',url+req.url);
-              res.redirect(authenticationUrl+'login')
-          } else {
-              req.user = {
-                  level: payload.level,
-                  _id: payload._id,
-                  name: user.name
-              }
-              next();
-          }
+      axios.post(authenticationUrl+'verifyToken',{token:req.cookies.token})
+        .then(response=>{
+            if(response.status == 200){
+                req.user={level:response.data.level}
+                next()
+            }
+            else{ res.redirect(authentication +'/login')}
       })
   }
 })
-*/
 
 
 // view engine setup
@@ -70,7 +68,8 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.redirect('http://localhost:4000/')
+  res.render('error'); 
 });
 
 module.exports = app;

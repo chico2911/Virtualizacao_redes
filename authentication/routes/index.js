@@ -3,8 +3,9 @@ var router = express.Router();
 var jwt = require('jsonwebtoken')
 var User = require('../controllers/users');
 
+
 /* GET home page. */
-router.get('/login', function(req, res, next) {
+router.get(['/login','/'], function(req, res, next) {
   res.render('login', { title: 'Login' });
 });
 
@@ -35,7 +36,7 @@ router.post('/login', function(req, res, next) {
                     res.redirect(req.cookies.url);
                   }
                   else{
-                    res.redirect('http:localhost:7700/homepage')
+                    res.redirect('https://localhost:4000')
                   }
                   
                 }
@@ -49,7 +50,7 @@ router.post('/login', function(req, res, next) {
 
 router.post("/signup", function (req, res) {
   var user = req.body;
-  if(user.level == 'level'){
+  if(user.level == 'admin'){
     user.level=1
   }
   else{
@@ -67,9 +68,9 @@ router.post('/verifyToken', function(req,res){
   var token = req.body.token;
   jwt.verify(token, 'VR2021', function (e, payload) {
     if (e) {
-        res.status(403).jsonp({msg:"JWT is not valid."});
+        res.status(403).jsonp({msg:"JWT is not valid."})
     } else {
-        res.status(200).jsonp({msg:'JWT is valid'})
+        res.status(200).jsonp({msg:'JWT is valid',level:payload.level});
     }
   })
 })

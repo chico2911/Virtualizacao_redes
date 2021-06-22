@@ -2,20 +2,45 @@ version: '3'
 
 services:
     mongo:
-      image: mongo
-      container_name: mongo_container
-      volumes: 
+        image: mongo
+        container_name: mongo_container
+        volumes: 
           - database:/home
-      networks:
+        networks:
           - network1
-    authentication:
+        restart: 
+            always      
+    auth:
         image:  authentication
         container_name: authentication_container
+        ports:
+            - 5000:5000
         networks: 
             - network1
+            - network2
+        restart: 
+            always      
+    json:
+        image: json_server
+        container_name: json_container
+        restart: always  
+        networks:
+            - network2
+        restart: 
+            always              
+    httpserver:
+        image: http_server
+        container_name: http_container
         ports:
-            - '8001:8001'         
+            - 4000:4000
+        restart: 
+            always    
+        networks: 
+            - network2
+     # Proxies requests to internal services     
 volumes:
     database:
+    db:
 networks: 
     network1:
+    network2:

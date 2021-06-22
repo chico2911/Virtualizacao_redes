@@ -4,8 +4,11 @@ block content
     .w3-card-4
         header.w3-container.w3-teal
             h3 Lista de Alunos
-            form(action='/registar' method='GET')
-                input.w3-btn.w3-blue-grey(type='submit' value='Registar')
+            if level==1
+                form(action='/adicionar' method='GET')
+                    input.w3-btn.w3-blue-grey(type='submit' value='Registar')
+            w3.w3-right
+                a.w3-btn.w3-black.w3-round-xlarge.w3-bar-item(href='/logout') Logout     
         if lista.length > 0
             .w3-container
                 table(class="w3-table-all")
@@ -25,4 +28,4 @@ block content
             div(class="w3-container")
                 p Ainda não há alunos.
             footer(class="w3-container w3-teal")
-                adress Gerado por galuno :: 2020-Novembro, jcr
+                adress 
